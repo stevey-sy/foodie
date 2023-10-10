@@ -18,8 +18,6 @@ package com.google.samples.apps.sunflower.data
 
 import com.google.gson.annotations.SerializedName
 
-data class Food (
-    @field:SerializedName("foodId") val foodId: String,
-    @field:SerializedName("image") val image: String,
-    @field:SerializedName("label") val label: String
+class EdamamFoodsResponse (
+    @field:SerializedName("hints") val hints: List<EdamamFood>
 )

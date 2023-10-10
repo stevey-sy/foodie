@@ -16,6 +16,11 @@
 
 package com.google.samples.apps.sunflower.api
 
+import com.google.samples.apps.sunflower.data.EdamamFoodsResponse
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -26,5 +31,23 @@ interface EdamamService {
         @Query("app_id") appId : String,
         @Query("app_key") appKey : String,
         @Query("nutrition-type") nutritionType: String,
-    )
+    ) : EdamamFoodsResponse
+
+    companion object {
+        private const val BASE_URL = "https://api.edamam.com/api/food-database/v2/parser"
+
+        fun create(): EdamamService {
+            val logger = HttpLoggingInterceptor().apply {level = HttpLoggingInterceptor.Level.BASIC}
+            val client = OkHttpClient.Builder()
+                .addInterceptor(logger)
+                .build()
+
+            return Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(EdamamService::class.java)
+        }
+    }
 }
